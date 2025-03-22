@@ -5,4 +5,5 @@ const app = express();
 
 app.get('/', (req, res) => res.send('Server is ready'));
 
+// listen to port
 app.listen(port, () => console.log('Server started on port ${port}'));
