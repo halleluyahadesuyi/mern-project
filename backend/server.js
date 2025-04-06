@@ -10,6 +10,9 @@ connectDB();
 
 const app = express();
 
+app.use(express.json());  // add body parser middleware
+app.use(express.urlencoded({ extended: true }));  // parse form data
+
 // Mount user-related routes under /api/users
 app.use('/api/users', userRoutes);
 
