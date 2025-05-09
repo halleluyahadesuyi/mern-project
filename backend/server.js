@@ -1,6 +1,7 @@
 import express from 'express';
 import dotenv from 'dotenv';
 dotenv.config(); // Load environment variables from .env file
+import cookieParser from 'cookie-parser';
 import { notFound, errorHandler } from './middleware/errorMiddleware.js';
 import connectDB from './config/db.js';
 const port = process.env.PORT || 5000;
@@ -10,8 +11,10 @@ connectDB();
 
 const app = express();
 
-app.use(express.json());  // add body parser middleware
-app.use(express.urlencoded({ extended: true }));  // parse form data
+app.use(express.json()); // add body parser middleware
+app.use(express.urlencoded({ extended: true })); // parse form data
+
+app.use(cookieParser());
 
 // Mount user-related routes under /api/users
 app.use('/api/users', userRoutes);

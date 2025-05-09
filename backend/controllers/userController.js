@@ -66,25 +66,58 @@ const registerUser = asyncHandler(async (req, res) => {
 // @access  Public
 const logoutUser = asyncHandler(async (req, res) => {
   res.cookie('jwt', '', {
-    httpOnly: true,   // Prevents JavaScript access to the cookie (security best practice)
-    expires: new Date(0),   // Sets the cookie to expire immediately (epoch --- January 1, 1970)
+    httpOnly: true, // Prevents JavaScript access to the cookie (security best practice)
+    expires: new Date(0), // Sets the cookie to expire immediately (epoch --- January 1, 1970)
   });
 
   res.status(200).json({ message: 'User logged out' }); // Placeholder logic
 });
 
-// @desc    Fetch logged-in user's profile (placeholder)
+// @desc    Fetch logged-in user's profile
 // @route   GET /api/users/profile
 // @access  Private
 const getUserProfile = asyncHandler(async (req, res) => {
-  res.status(200).json({ message: 'User Profile' }); // Placeholder logic
+  // Extract user data from the authenticated request
+  const user = {
+    _id: req.user._id,
+    name: req.user.name,
+    email: req.user.email,
+  };
+
+  // Return basic user profile info
+  res.status(200).json(user);
 });
 
-// @desc    Update user profile (placeholder)
+// @desc    Update user profile
 // @route   PUT /api/users/profile
 // @access  Private
 const updateUserProfile = asyncHandler(async (req, res) => {
-  res.status(200).json({ message: 'Update user profile' }); // Placeholder logic
+  // Retrieve the user document from the database
+  const user = await User.findById(req.user._id); 
+
+  if (user) {
+    // Update user fields with request data if provided
+    user.name = req.body.name || user.name;
+    user.email = req.body.email || user.email;
+
+    // Update password only if new one is provided
+    if (req.body.password) {
+      user.password = req.body.password;
+    }
+
+    // Save updated user and return simplified response
+    const updatedUser = await user.save();
+
+    res.status(200).json({
+      _id: updatedUser._id,
+      name: updatedUser.name,
+      email: updatedUser.email,
+    });
+  } else {
+    // Return error if user is not found
+    res.status(404);
+    throw new Error('User not found');
+  }
 });
 
 export {
