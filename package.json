@@ -6,7 +6,8 @@
   "scripts": {
     "start": "node backend/server.js",
     "server": "node --watch --env-file=.env backend/server.js",
-    "client": "npm run dev --prefix frontend"
+    "client": "npm run dev --prefix frontend",
+    "dev": "concurrently \"npm run server\" \"npm run client\""
   },
   "keywords": [],
   "author": "",
@@ -20,5 +21,8 @@
     "express-async-handler": "^1.2.0",
     "jsonwebtoken": "^9.0.2",
     "mongoose": "^8.12.2"
+  },
+  "devDependencies": {
+    "concurrently": "^9.1.2"
   }
 }
